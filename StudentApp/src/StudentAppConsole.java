@@ -5,6 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class StudentAppConsole {
+	public StudentAppConsole() {
+		
+	}
+	
   public static void main(String[] args) throws IOException {
 	System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------");
 	System.out.println("YeniDers:1 YeniOgrenci:2 ListeleDers:3 ListeleÖğrenci:4 EkleNot:5 ListeleNot:6 Çıkış:0");

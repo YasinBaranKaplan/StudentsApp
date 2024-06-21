@@ -11,8 +11,11 @@ public class Input extends JFrame {
 		if(input.equals("1"))
 			new SecIslem();
 		
+		else if(input.equals("2"))
+			new StudentAppConsole();
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setVisible(true);
+		setVisible(false);
 	}
 	
 	

@@ -3,6 +3,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -40,9 +41,11 @@ public class SecIslem extends JFrame implements ItemListener {
     private JTextField ogrenciAd;
     private JTextField ogrenciSoyad;
     private JTextArea dersList;
+    private JTextArea ogrenciList;
     private JPanel yeniDersPanel;
     private JPanel yeniOgrenciPanel;
     private JPanel listeleDersPanel;
+    private JPanel listeleOgrenciPanel;
     private JButton kaydet;
     private JButton temizle;
 
@@ -79,6 +82,36 @@ public class SecIslem extends JFrame implements ItemListener {
         Border tborder = BorderFactory.createTitledBorder("Seçenekler");
         panel.setBorder(tborder);
         
+        //Ders Ekle Panel
+        JLabel label1 = new JLabel("Ders Kod");
+		dersKod = new JTextField();
+		JLabel label2 = new JLabel("Ders Baslik");
+		dersBaslik = new JTextField();
+		
+		yeniDersPanel = new JPanel(new GridLayout(3,2));
+		yeniDersPanel.add(label1);yeniDersPanel.add(dersKod);yeniDersPanel.add(label2);yeniDersPanel.add(dersBaslik);
+		
+		Border border = BorderFactory.createTitledBorder("Yeni Ders");
+        yeniDersPanel.setBorder(border);
+        yeniDersPanel.setBounds(250,25 , 200, 200);
+        
+        //Orenci Ekle Panel
+        JLabel ogrenciNO = new JLabel("Ogrenci No");
+		ogrenciNo = new JTextField();
+		JLabel ogrenciAD = new JLabel("Ogrenci Ad");
+		ogrenciAd = new JTextField();
+		JLabel ogrenciSOYAD = new JLabel("Ogrenci Soyad");
+		ogrenciSoyad = new JTextField();
+		
+	    yeniOgrenciPanel = new JPanel(new GridLayout(4,2));
+		yeniOgrenciPanel.add(ogrenciNO);yeniOgrenciPanel.add(ogrenciNo);yeniOgrenciPanel.add(ogrenciAD);yeniOgrenciPanel.add(ogrenciAd);
+		yeniOgrenciPanel.add(ogrenciSOYAD);yeniOgrenciPanel.add(ogrenciSoyad);
+		
+		
+		Border tbord = BorderFactory.createTitledBorder("Yeni Öğrenci");
+		yeniOgrenciPanel.setBorder(tbord);
+		yeniOgrenciPanel.setBounds(250,25 , 200, 200);
+        
        
         setLayout(null);
         
@@ -112,60 +145,43 @@ public class SecIslem extends JFrame implements ItemListener {
         if(listeleDersPanel != null) {
         	remove(listeleDersPanel);
         }
+        if(listeleOgrenciPanel !=null) {
+        	remove(listeleOgrenciPanel);
+        }
         
     	if(yeniDers.isSelected()) {
+    		 if (kaydet == null) {
+                 kaydet = new JButton("Kaydet");
+                 temizle = new JButton("Temizle");}
     		
-    		JLabel label1 = new JLabel("Ders Kod");
-    		dersKod = new JTextField();
-    		JLabel label2 = new JLabel("Ders Baslik");
-    		dersBaslik = new JTextField();
-    		kaydet = new JButton("Kaydet");
-    		temizle = new JButton("Temizle");
-    		
-    		yeniDersPanel = new JPanel(new GridLayout(3,2));
-    		yeniDersPanel.add(label1);yeniDersPanel.add(dersKod);yeniDersPanel.add(label2);yeniDersPanel.add(dersBaslik);
     		yeniDersPanel.add(kaydet);yeniDersPanel.add(temizle);
-    		
-    		
-    		Border border = BorderFactory.createTitledBorder("Yeni Ders");
-            yeniDersPanel.setBorder(border);
-            yeniDersPanel.setBounds(250,25 , 200, 200);
     		add(yeniDersPanel);
-    		
     		setSize(500,300);
     		
-    		//Butonlar için actionlist ekleme
     		kaydet.addActionListener(new ActionListener() {
-				String dbKod = dersKod.getText()+" "+dersBaslik.getText();
 				@Override
-				 public void actionPerformed(ActionEvent e) {
-			        // Ders kodu ve başlığını al
-			        String dbKod = dersKod.getText() + " " + dersBaslik.getText();
-			        String dosyaYolu = "C:\\Users\\kapla\\eclipse-workspace\\StudentApp\\src\\Ders";
-			        try {
-			            // FileWriter kullanarak dosyayı açın. Var olan dosya üzerine yazacak.
-			            FileWriter yazici = new FileWriter(dosyaYolu);
-			            yazici.write(dbKod);
-			            yazici.close();
-
-			            
-			            JOptionPane.showMessageDialog(null, "Başarıyla kaydedildi.");
-			        } catch (IOException ex) {
-			            
-			            JOptionPane.showMessageDialog(null, "Dosyaya yazılırken bir hata oluştu: " + ex.getMessage(), "Hata", JOptionPane.ERROR_MESSAGE);
-			            ex.printStackTrace();
+				public void actionPerformed(ActionEvent e) {
+					String DersBilgi = dersKod.getText()+"          "+dersBaslik.getText();
+					String dosyaYoluDers = "C:\\Users\\kapla\\eclipse-workspace\\StudentApp\\src\\Ders";
+					try {
+						FileWriter fw = new FileWriter(dosyaYoluDers,true);
+						BufferedWriter bw  = new BufferedWriter(fw);
+						bw.write(DersBilgi+"\n");
+						bw.close();
+					}catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
+					JOptionPane.showMessageDialog(null, "Ders Kaydedildi.");
 				}
 			});
     		
     		temizle.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					dersKod.setText("");
 					dersBaslik.setText("");
-					JOptionPane.showMessageDialog(null, "Alanlar Temizlendi.");
 				}
 			});
     		
@@ -174,22 +190,12 @@ public class SecIslem extends JFrame implements ItemListener {
     	}
     	
     	else if(yeniOgrenci.isSelected()) {
-    		JLabel ogrenciNO = new JLabel("Ogrenci No");
-    		ogrenciNo = new JTextField();
-    		JLabel ogrenciAD = new JLabel("Ogrenci Ad");
-    		ogrenciAd = new JTextField();
-    		JLabel ogrenciSOYAD = new JLabel("Ogrenci Soyad");
-    		ogrenciSoyad = new JTextField();
-    		
-    	    yeniOgrenciPanel = new JPanel(new GridLayout(4,2));
-    		yeniOgrenciPanel.add(ogrenciNO);yeniOgrenciPanel.add(ogrenciNo);yeniOgrenciPanel.add(ogrenciAD);yeniOgrenciPanel.add(ogrenciAd);
-    		yeniOgrenciPanel.add(ogrenciSOYAD);yeniOgrenciPanel.add(ogrenciSoyad);
+    		 if (kaydet == null) {
+                 kaydet = new JButton("Kaydet");
+                 temizle = new JButton("Temizle");}
+    		 
     		yeniOgrenciPanel.add(kaydet);
     		yeniOgrenciPanel.add(temizle);
-    		
-    		Border tbord = BorderFactory.createTitledBorder("Yeni Öğrenci");
-    		yeniOgrenciPanel.setBorder(tbord);
-    		yeniOgrenciPanel.setBounds(250,25 , 200, 200);
     		add(yeniOgrenciPanel);
     		
     		setSize(500,300);
@@ -197,25 +203,28 @@ public class SecIslem extends JFrame implements ItemListener {
     		kaydet.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String ogrenciBilgi = ogrenciNo.getText() + " " + ogrenciAd.getText() + " " + ogrenciSoyad.getText();
+                    String ogrenciBilgi = ogrenciNo.getText() + "          " + ogrenciAd.getText() + "        " + ogrenciSoyad.getText();
                     String dosyaYolu = "C:\\Users\\kapla\\eclipse-workspace\\StudentApp\\src\\Ogrenci";
-                    try (FileWriter yazici = new FileWriter(dosyaYolu, true)) {
-                        yazici.write(ogrenciBilgi + "\n");
-                        JOptionPane.showMessageDialog(null, "Başarıyla kaydedildi.");
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(null, "Dosyaya yazılırken bir hata oluştu: " + ex.getMessage(), "Hata", JOptionPane.ERROR_MESSAGE);
-                        ex.printStackTrace();
-                    }
+                    
+                    try {
+						FileWriter fw = new FileWriter(dosyaYolu,true);
+						BufferedWriter bw  = new BufferedWriter(fw);
+						bw.write(ogrenciBilgi+"\n");
+						bw.close();
+								
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+                    JOptionPane.showMessageDialog(null, "Öğrenci Kaydedildi.");
                 }
             });
-    		
     		temizle.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     ogrenciNo.setText("");
                     ogrenciAd.setText("");
                     ogrenciSoyad.setText("");
-                    JOptionPane.showMessageDialog(null, "Alanlar Temizlendi.");
                 }
             });
     		
@@ -224,26 +233,62 @@ public class SecIslem extends JFrame implements ItemListener {
     	}
     	else if(listeleDers.isSelected()) {
     	    String dosyaYolu ="C:\\Users\\kapla\\eclipse-workspace\\StudentApp\\src\\Ders";
-    	    BufferedReader okuyucu = null;
-    	    try {
-				okuyucu = new BufferedReader(new FileReader(dosyaYolu));
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+    	    
     		
     		dersList = new JTextArea("Ders No     Ders Baslık\n");
     	    listeleDersPanel = new JPanel(new GridLayout(1,1));
     	    listeleDersPanel.add(dersList);
-    	    dersList.append(okuyucu.toString());
+    	    
     	    
     	    Border tBorder = BorderFactory.createTitledBorder("Listele Ders");
+    	    try {
+				FileReader fr = new FileReader(dosyaYolu);
+				BufferedReader br = new BufferedReader(fr);
+				String line;
+				while((line=br.readLine())!=null) {
+					dersList.append(line + "\n");
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
     	    listeleDersPanel.setBorder(tBorder);
     	    listeleDersPanel.setBounds(250,25 , 200, 200); // Fix: set bounds of listeleDersPanel
     	    
     	    add(listeleDersPanel);
+    	    
+    	    setSize(500,300);
     	    revalidate();
     	    repaint();
+    	}
+    
+    	else if(listeleOgrenci.isSelected()) {
+    		String dosyaYolu ="C:\\Users\\kapla\\eclipse-workspace\\StudentApp\\src\\Ogrenci";
+    		ogrenciList = new JTextArea("No          Ad       Soyad\n");
+    		
+    		listeleOgrenciPanel = new JPanel(new GridLayout(1,1));
+    		listeleOgrenciPanel.add(ogrenciList);
+    		
+    		Border tBorder = BorderFactory.createTitledBorder("Listele Öğrenci");
+    		try {
+				FileReader fr = new FileReader(dosyaYolu);
+				BufferedReader br = new BufferedReader(fr);
+				String line;
+				while((line=br.readLine())!=null) {
+					ogrenciList.append(line + "\n");
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		listeleOgrenciPanel.setBorder(tBorder);
+    		listeleOgrenciPanel.setBounds(250,25 , 200, 200);
+    		
+    		add(listeleOgrenciPanel);
+    		setSize(500,300);
+    	    revalidate();
+    	    repaint();
+    		
     	}
     }
 
